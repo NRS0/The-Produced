@@ -11,15 +11,24 @@ import { Menu, X } from "lucide-react";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
+  const [flicker, setFlicker] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"home" | "studio">("home");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
+    // Start flicker and background transition at 1.8s
+    const flickerTimer = setTimeout(() => {
+      setFlicker(true);
+    }, 1800);
+
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2500); // 2.5 seconds preloader
-    return () => clearTimeout(timer);
+    }, 2800); // Extended slightly to show the red transition
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(flickerTimer);
+    };
   }, []);
 
   return (
@@ -28,13 +37,17 @@ export default function App() {
         {loading ? (
           <motion.div
             key="preloader"
-            initial={{ opacity: 1 }}
+            initial={{ backgroundColor: "#000000" }}
+            animate={{ 
+              backgroundColor: flicker ? "#FA003F" : "#000000",
+              transition: { duration: 0.8, ease: "easeInOut" }
+            }}
             exit={{ 
               opacity: 0,
               y: -20,
               transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] }
             }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black"
+            className="fixed inset-0 z-[100] flex items-center justify-center"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -45,16 +58,36 @@ export default function App() {
               }}
               className="relative"
             >
-              <img 
-                src="https://i.ibb.co/ksH2WLYk/THE-PRODUCED-LOGO-RED.png" 
-                alt="Produced Logo" 
-                className="h-32 w-auto object-contain md:h-48"
-                referrerPolicy="no-referrer"
-              />
+              <AnimatePresence mode="wait">
+                {!flicker ? (
+                  <motion.img 
+                    key="logo-1"
+                    initial={{ opacity: 1 }}
+                    exit={{ opacity: 0, transition: { duration: 0.1 } }}
+                    src="https://i.ibb.co/ksH2WLYk/THE-PRODUCED-LOGO-RED.png" 
+                    alt="Produced Logo" 
+                    className="h-32 w-auto object-contain md:h-48"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <motion.img 
+                    key="logo-2"
+                    initial={{ opacity: 0 }}
+                    animate={{ 
+                      opacity: [0, 1, 0.5, 1],
+                      transition: { duration: 0.3, times: [0, 0.2, 0.5, 1] }
+                    }}
+                    src="https://imglink.cc/cdn/vSFMkujUJV.png" 
+                    alt="Produced Logo Flicker" 
+                    className="h-32 w-auto object-contain md:h-48"
+                    referrerPolicy="no-referrer"
+                  />
+                )}
+              </AnimatePresence>
               {/* Subtle pulsing glow effect */}
               <motion.div 
                 animate={{ 
-                  opacity: [0.2, 0.5, 0.2],
+                  opacity: flicker ? 0 : [0.2, 0.5, 0.2],
                   scale: [1, 1.05, 1]
                 }}
                 transition={{ 
@@ -133,9 +166,12 @@ export default function App() {
                     {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
                   </button>
 
-                  <button className="liquid-glass hidden rounded-full px-8 py-3 text-sm font-medium text-foreground transition-transform hover:scale-[1.03] lg:block">
+                  <a 
+                    href="mailto:theproducedstudio@gmail.com"
+                    className="liquid-glass hidden rounded-full px-8 py-3 text-sm font-medium text-foreground transition-transform hover:scale-[1.03] lg:block"
+                  >
                     Contact
-                  </button>
+                  </a>
                 </div>
 
                 {/* Mobile/Tablet Menu Overlay */}
@@ -172,9 +208,12 @@ export default function App() {
                       >
                         About
                       </a>
-                      <button className="liquid-glass mt-6 w-full rounded-full py-5 text-lg font-medium text-foreground">
+                      <a 
+                        href="mailto:theproducedstudio@gmail.com"
+                        className="liquid-glass mt-6 w-full rounded-full py-5 text-center text-lg font-medium text-foreground"
+                      >
                         Contact
-                      </button>
+                      </a>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -200,7 +239,10 @@ export default function App() {
                           From concept to screen, we produce the imagery that makes ideas undeniable.
                         </p>
 
-                        <button className="liquid-glass animate-fade-rise-delay-2 mt-16 cursor-pointer rounded-full px-16 py-6 text-lg font-medium text-foreground transition-transform hover:scale-[1.03]">
+                        <button 
+                          onClick={() => setActiveTab("studio")}
+                          className="liquid-glass animate-fade-rise-delay-2 mt-16 cursor-pointer rounded-full px-16 py-6 text-lg font-medium text-foreground transition-transform hover:scale-[1.03]"
+                        >
                           Begin Journey
                         </button>
                       </div>
@@ -236,7 +278,10 @@ export default function App() {
                   From concept to screen, we produce the imagery that makes ideas undeniable.
                 </p>
 
-                <button className="liquid-glass animate-fade-rise-delay-2 mt-10 cursor-pointer rounded-full px-12 py-5 text-base font-medium text-foreground transition-transform hover:scale-[1.03]">
+                <button 
+                  onClick={() => setActiveTab("studio")}
+                  className="liquid-glass animate-fade-rise-delay-2 mt-10 cursor-pointer rounded-full px-12 py-5 text-base font-medium text-foreground transition-transform hover:scale-[1.03]"
+                >
                   Begin Journey
                 </button>
               </div>
