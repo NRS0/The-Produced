@@ -306,7 +306,13 @@ export default function App() {
                       { url: "https://imglink.cc/cdn/Q3-PjdGrH4.png", span: "lg:col-span-6 lg:row-span-1 h-[242px]" },
                       { url: "https://imglink.cc/cdn/iiWkIbKyBX.png", span: "lg:col-span-12 lg:row-span-1 h-[300px]" },
                       { url: "https://imglink.cc/cdn/vgeGgHT7na.png", span: "lg:col-span-7 lg:row-span-1 h-[242px]" },
-                      { url: "https://imglink.cc/cdn/BwuVWNd3Xr.png", span: "lg:col-span-5 lg:row-span-1 h-[242px]" }
+                      { url: "https://imglink.cc/cdn/BwuVWNd3Xr.png", span: "lg:col-span-5 lg:row-span-1 h-[242px]" },
+                      { url: "https://imglink.cc/cdn/-L97CIOAPU.png", span: "lg:col-span-4 lg:row-span-1 h-[242px]" },
+                      { url: "https://imglink.cc/cdn/gkl6wUVQ4S.png", span: "lg:col-span-4 lg:row-span-1 h-[242px]" },
+                      { url: "https://imglink.cc/cdn/KVL4NkYmQb.png", span: "lg:col-span-4 lg:row-span-1 h-[242px]" },
+                      { url: "https://imglink.cc/cdn/ZRRM-7oZ9n.png", span: "lg:col-span-4 lg:row-span-1 h-[242px]" },
+                      { url: "https://imglink.cc/cdn/2Ed3eXmPDI.png", span: "lg:col-span-4 lg:row-span-1 h-[242px]" },
+                      { url: "https://imglink.cc/cdn/gSHQxxGdwL.png", span: "lg:col-span-4 lg:row-span-1 h-[242px]" }
                     ].map((item, idx) => (
                       <motion.div 
                         key={idx}
