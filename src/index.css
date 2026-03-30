@@ -38,7 +38,11 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-body;
+    @apply bg-background text-foreground font-body overflow-x-hidden;
+  }
+  html {
+    @apply overflow-x-hidden;
+    scroll-behavior: smooth;
   }
 }
 

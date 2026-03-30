@@ -5,6 +5,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { GrassField } from "./components/GrassField";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
@@ -105,21 +106,17 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
-            className="relative flex min-h-screen flex-col bg-black selection:bg-white selection:text-background"
+            className="relative flex min-h-screen flex-col selection:bg-white selection:text-background"
           >
+            {/* Fixed Interactive Background */}
+            <div className="fixed inset-0 z-0">
+              <GrassField />
+              {/* Subtle overlay */}
+              <div className="absolute inset-0 bg-black/20 pointer-events-none" />
+            </div>
+
             {/* Hero Section Container */}
-            <div className="relative h-[65vh] w-full overflow-hidden bg-black lg:h-screen">
-              {/* Video Background - Absolute within hero so it scrolls away */}
-              <div className="absolute inset-0 z-0">
-                <iframe
-                  src="https://player.mux.com/NMBBSsrAd5SYsg4o9w8Df7FNF1dMeoTnntu93BF4wBA?background=1&autoplay=1&loop=1&muted=1"
-                  className="absolute inset-0 h-full w-full object-cover opacity-80 pointer-events-none"
-                  allow="autoplay; fullscreen"
-                  style={{ border: 'none', width: '100vw', height: '100vh' }}
-                />
-                {/* Subtle overlay */}
-                <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-              </div>
+            <div className="relative h-[85vh] w-full lg:h-screen">
 
               {/* Navigation Bar */}
               <nav className="absolute top-0 left-0 right-0 z-50 w-full px-6 py-8 md:px-12">
@@ -222,7 +219,7 @@ export default function App() {
               {activeTab === "home" ? (
                 <>
                   {/* Hero Content - Refined Framing */}
-                  <main className="relative z-10 flex h-full flex-col items-center justify-center px-8 text-center lg:justify-end lg:pb-56">
+                  <main className="relative z-10 flex h-full flex-col items-center justify-center px-8 pt-20 text-center lg:justify-end lg:pb-56 lg:pt-0">
                     <div className="max-w-6xl">
                       <h1 
                         className="animate-fade-rise text-4xl font-normal leading-[0.9] tracking-[-0.03em] text-foreground sm:text-7xl lg:text-9xl"
@@ -235,22 +232,37 @@ export default function App() {
                       {/* Desktop only subtext and button (overlayed) */}
                       <div className="hidden lg:block">
                         <p className="animate-fade-rise-delay mx-auto mt-10 max-w-3xl text-xl leading-relaxed text-foreground/90">
-                          We build AI-powered tools for directors, creators, and visual thinkers. 
-                          From concept to screen, we produce the imagery that makes ideas undeniable.
+                          We build AI tools with the brightest creators and visual thinkers from concept to screen. 
+                          We produce imagery that makes ideas undeniable.
                         </p>
 
                         <button 
                           onClick={() => setActiveTab("studio")}
                           className="liquid-glass animate-fade-rise-delay-2 mt-16 cursor-pointer rounded-full px-16 py-6 text-lg font-medium text-foreground transition-transform hover:scale-[1.03]"
                         >
-                          Begin Journey
+                          Begin Your Journey
+                        </button>
+                      </div>
+
+                      {/* Mobile only subtext and button (directly under heading) */}
+                      <div className="mt-8 block md:hidden">
+                        <p className="animate-fade-rise-delay mx-auto max-w-md text-base leading-relaxed text-foreground/90">
+                          We build AI tools with the brightest creators and visual thinkers from concept to screen. 
+                          We produce imagery that makes ideas undeniable.
+                        </p>
+
+                        <button 
+                          onClick={() => setActiveTab("studio")}
+                          className="liquid-glass animate-fade-rise-delay-2 mt-10 cursor-pointer rounded-full px-10 py-4 text-base font-medium text-foreground transition-transform hover:scale-[1.03]"
+                        >
+                          Begin Your Journey
                         </button>
                       </div>
                     </div>
                   </main>
                 </>
               ) : (
-                <main className="relative z-10 flex h-full flex-col items-center justify-center px-8 text-center">
+                <main className="relative z-10 flex h-full flex-col items-center justify-center px-8 pt-20 text-center lg:pt-0">
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -272,23 +284,23 @@ export default function App() {
             </div>
 
             {activeTab === "home" && (
-              <div className="relative z-10 flex flex-col items-center bg-black px-8 py-16 text-center lg:hidden">
+              <div className="relative z-10 hidden flex-col items-center bg-transparent px-8 py-16 text-center md:flex lg:hidden">
                 <p className="animate-fade-rise-delay max-w-2xl text-base leading-relaxed text-foreground/90">
-                  We build AI-powered tools for directors, creators, and visual thinkers. 
-                  From concept to screen, we produce the imagery that makes ideas undeniable.
+                  We build AI tools with the brightest creators and visual thinkers from concept to screen. 
+                  We produce imagery that makes ideas undeniable.
                 </p>
 
                 <button 
                   onClick={() => setActiveTab("studio")}
                   className="liquid-glass animate-fade-rise-delay-2 mt-10 cursor-pointer rounded-full px-12 py-5 text-base font-medium text-foreground transition-transform hover:scale-[1.03]"
                 >
-                  Begin Journey
+                  Begin Your Journey
                 </button>
               </div>
             )}
 
             {activeTab === "studio" && (
-              <section className="relative z-10 bg-black px-6 py-24 md:px-12">
+              <section className="relative z-10 bg-transparent px-6 py-24 md:px-12">
                 <div className="mx-auto max-w-screen-2xl">
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-12">
                     {[
@@ -348,7 +360,7 @@ export default function App() {
             )}
 
             {/* About Section - Improved Spacing & Framing */}
-            <section id="about" className="relative z-10 bg-black px-8 py-32 md:px-16 md:py-64">
+            <section id="about" className="relative z-10 bg-transparent px-8 py-32 md:px-16 md:py-64">
               <div className="mx-auto max-w-screen-2xl">
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }}
