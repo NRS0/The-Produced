@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { GrassField } from "./components/GrassField";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Play } from "lucide-react";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -16,6 +16,7 @@ export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"home" | "studio">("home");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
   useEffect(() => {
     // Start flicker and background transition at 1.8s
@@ -302,6 +303,87 @@ export default function App() {
             {activeTab === "studio" && (
               <section className="relative z-10 bg-transparent px-6 py-24 md:px-12">
                 <div className="mx-auto max-w-screen-2xl">
+                  {/* Featured Video Section */}
+                  <div className="mb-16 flex flex-col items-center gap-16">
+                    {/* Top Video: The Call */}
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8 }}
+                      className="group relative aspect-video w-full max-w-5xl cursor-pointer overflow-hidden rounded-3xl bg-zinc-900/50 shadow-2xl"
+                      onClick={() => setSelectedVideo("https://player.mux.com/HWhd6N8GWY01PJ005XjQW3j9nDJPqKBr5101UihwRE3WuU?metadata-video-title=The+Call&video-title=The+Call")}
+                    >
+                      <img 
+                        src="https://image.mux.com/HWhd6N8GWY01PJ005XjQW3j9nDJPqKBr5101UihwRE3WuU/thumbnail.jpg?time=0" 
+                        alt="The Call Video Thumbnail" 
+                        className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                        referrerPolicy="no-referrer"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 transition-colors duration-500 group-hover:bg-black/40">
+                        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/10 backdrop-blur-xl transition-all duration-500 group-hover:scale-110 group-hover:bg-white/20">
+                          <Play className="ml-1 h-8 w-8 fill-white text-white" />
+                        </div>
+                      </div>
+                      <div className="absolute bottom-8 left-8 translate-y-4 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+                        <p className="text-xs font-medium uppercase tracking-widest text-white/60">Featured Film</p>
+                        <h4 className="mt-2 text-3xl font-medium text-white" style={{ fontFamily: "'Instrument Serif', serif" }}>The Call</h4>
+                      </div>
+                    </motion.div>
+
+                    {/* Middle Video: The Chase */}
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: 0.1 }}
+                      className="group relative aspect-video w-full max-w-5xl cursor-pointer overflow-hidden rounded-3xl bg-zinc-900/50 shadow-2xl"
+                      onClick={() => setSelectedVideo("https://player.mux.com/oX9d02YHnSI7n95TwzzNxjdLWtqP01pIZiAidQSwySpaI?metadata-video-title=The+Chase&video-title=The+Chase")}
+                    >
+                      <img 
+                        src="https://image.mux.com/oX9d02YHnSI7n95TwzzNxjdLWtqP01pIZiAidQSwySpaI/thumbnail.jpg?time=0" 
+                        alt="The Chase Video Thumbnail" 
+                        className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                        referrerPolicy="no-referrer"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 transition-colors duration-500 group-hover:bg-black/40">
+                        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/10 backdrop-blur-xl transition-all duration-500 group-hover:scale-110 group-hover:bg-white/20">
+                          <Play className="ml-1 h-8 w-8 fill-white text-white" />
+                        </div>
+                      </div>
+                      <div className="absolute bottom-8 left-8 translate-y-4 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+                        <p className="text-xs font-medium uppercase tracking-widest text-white/60">Featured Film</p>
+                        <h4 className="mt-2 text-3xl font-medium text-white" style={{ fontFamily: "'Instrument Serif', serif" }}>The Chase</h4>
+                      </div>
+                    </motion.div>
+
+                    {/* Bottom Video: The Clash */}
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: 0.2 }}
+                      className="group relative aspect-video w-full max-w-5xl cursor-pointer overflow-hidden rounded-3xl bg-zinc-900/50 shadow-2xl"
+                      onClick={() => setSelectedVideo("https://player.mux.com/teBfiaqKP5kzSdda2ZetxU9nz4dTXNLiXRYSRl4YUnc?metadata-video-title=The+Clash&video-title=The+Clash")}
+                    >
+                      <img 
+                        src="https://image.mux.com/teBfiaqKP5kzSdda2ZetxU9nz4dTXNLiXRYSRl4YUnc/thumbnail.jpg?time=0" 
+                        alt="The Clash Video Thumbnail" 
+                        className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                        referrerPolicy="no-referrer"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 transition-colors duration-500 group-hover:bg-black/40">
+                        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/10 backdrop-blur-xl transition-all duration-500 group-hover:scale-110 group-hover:bg-white/20">
+                          <Play className="ml-1 h-8 w-8 fill-white text-white" />
+                        </div>
+                      </div>
+                      <div className="absolute bottom-8 left-8 translate-y-4 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+                        <p className="text-xs font-medium uppercase tracking-widest text-white/60">Featured Film</p>
+                        <h4 className="mt-2 text-3xl font-medium text-white" style={{ fontFamily: "'Instrument Serif', serif" }}>The Clash</h4>
+                      </div>
+                    </motion.div>
+                  </div>
+
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-12">
                     {[
                       { url: "https://imglink.cc/cdn/hWTYlP7XGI.png", span: "lg:col-span-8 lg:row-span-2 h-[500px]", title: "Neon Noir", label: "Project 01" },
@@ -476,6 +558,44 @@ export default function App() {
                 </p>
               </div>
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Video Lightbox Overlay */}
+      <AnimatePresence>
+        {selectedVideo && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 p-4 backdrop-blur-xl md:p-12"
+            onClick={() => setSelectedVideo(null)}
+          >
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="absolute right-8 top-8 z-[210] text-white/60 transition-colors hover:text-white"
+              onClick={(e) => { e.stopPropagation(); setSelectedVideo(null); }}
+            >
+              <X size={40} strokeWidth={1} />
+            </motion.button>
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="relative aspect-video w-full max-w-6xl overflow-hidden rounded-2xl shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <iframe
+                src={selectedVideo}
+                className="h-full w-full border-0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowFullScreen
+              />
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
