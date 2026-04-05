@@ -9,6 +9,7 @@ import { GrassField } from "./components/GrassField";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Menu, X, Play } from "lucide-react";
+import { Analytics } from "@vercel/analytics/react";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -637,6 +638,7 @@ export default function App() {
           </motion.div>
         )}
       </AnimatePresence>
+      <Analytics />
     </>
   );
 }
