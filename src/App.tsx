@@ -305,6 +305,11 @@ export default function App() {
                 <div className="mx-auto max-w-screen-2xl">
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-12">
                     {[
+                      { url: "https://imglink.cc/cdn/i4VolVOCwH.png", span: "lg:col-span-4 h-[350px]" },
+                      { url: "https://imglink.cc/cdn/p-9D0eKdmo.png", span: "lg:col-span-4 h-[350px]" },
+                      { url: "https://imglink.cc/cdn/k127j8cU43.png", span: "lg:col-span-4 h-[350px]" },
+                      { url: "https://imglink.cc/cdn/YjTe4ZiXr5.png", span: "lg:col-span-6 h-[450px]" },
+                      { url: "https://imglink.cc/cdn/Y4_62nUHLs.png", span: "lg:col-span-6 h-[450px]" },
                       { url: "https://imglink.cc/cdn/FYBooA1NNV.png", span: "lg:col-span-4 h-[350px]" },
                       { url: "https://imglink.cc/cdn/9ze7x1WG95.png", span: "lg:col-span-4 h-[350px]" },
                       { url: "https://imglink.cc/cdn/ILU0UtwJCg.png", span: "lg:col-span-4 h-[350px]" },
