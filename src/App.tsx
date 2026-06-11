@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { GrassField } from "./components/GrassField";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,44 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<"home" | "studio">("home");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const [isButtonHovered, setIsButtonHovered] = useState(false);
+
+  const handleAboutClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    if (activeTab !== "studio") {
+      setActiveTab("studio");
+      setTimeout(() => {
+        const aboutSec = document.getElementById("about");
+        if (aboutSec) {
+          aboutSec.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100);
+    } else {
+      const aboutSec = document.getElementById("about");
+      if (aboutSec) {
+        aboutSec.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
+
+  const handleAboutClickMobile = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setIsMenuOpen(false);
+    if (activeTab !== "studio") {
+      setActiveTab("studio");
+      setTimeout(() => {
+        const aboutSec = document.getElementById("about");
+        if (aboutSec) {
+          aboutSec.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100);
+    } else {
+      const aboutSec = document.getElementById("about");
+      if (aboutSec) {
+        aboutSec.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
 
   useEffect(() => {
     // Start flicker and background transition at 1.8s
@@ -110,7 +148,12 @@ export default function App() {
             className="relative flex min-h-screen flex-col selection:bg-white selection:text-background"
           >
             {/* Fixed Interactive Background */}
-            <div className="fixed inset-0 z-0">
+            <div className={cn(
+              "fixed inset-0 z-0 transition-all",
+              (activeTab === "home" && isButtonHovered) 
+                ? "filter grayscale-[100%] contrast-[1.25] brightness-[0.75] duration-[1200ms] ease-out" 
+                : "duration-[2500ms] ease-out"
+            )}>
               <GrassField />
               {/* Subtle overlay */}
               <div className="absolute inset-0 bg-black/20 pointer-events-none" />
@@ -120,7 +163,12 @@ export default function App() {
             <div className="relative h-[85vh] w-full lg:h-screen">
 
               {/* Navigation Bar */}
-              <nav className="absolute top-0 left-0 right-0 z-50 w-full px-6 py-8 md:px-12">
+              <nav className={cn(
+                "absolute top-0 left-0 right-0 z-50 w-full px-6 py-8 md:px-12 transition-all",
+                (activeTab === "home" && isButtonHovered) 
+                  ? "filter grayscale-[100%] brightness-[0.8] duration-[1200ms] ease-out" 
+                  : "duration-[2500ms] ease-out"
+              )}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <img 
@@ -151,7 +199,11 @@ export default function App() {
                     >
                       Studio
                     </button>
-                    <a href="#about" className="text-sm font-medium tracking-wide text-muted-foreground/80 transition-colors hover:text-muted-foreground">
+                    <a 
+                      href="#about" 
+                      onClick={handleAboutClick}
+                      className="text-sm font-medium tracking-wide text-muted-foreground/80 transition-colors hover:text-muted-foreground"
+                    >
                       About
                     </a>
                   </div>
@@ -202,7 +254,7 @@ export default function App() {
                       <a 
                         href="#about" 
                         className="text-xl font-medium text-muted-foreground/80"
-                        onClick={() => setIsMenuOpen(false)}
+                        onClick={handleAboutClickMobile}
                       >
                         About
                       </a>
@@ -219,46 +271,22 @@ export default function App() {
 
               {activeTab === "home" ? (
                 <>
-                  {/* Hero Content - Refined Framing */}
-                  <main className="relative z-10 flex h-full flex-col items-center justify-center px-8 pt-20 text-center lg:justify-end lg:pb-56 lg:pt-0">
-                    <div className="max-w-6xl">
-                      <h1 
-                        className="animate-fade-rise text-4xl font-normal leading-[0.9] tracking-[-0.03em] text-foreground sm:text-7xl lg:text-9xl"
-                        style={{ fontFamily: "'Instrument Serif', serif" }}
+                  {/* Hero Content - Centered entry button (lowered slightly) */}
+                  <main className="relative z-10 flex h-full flex-col items-center justify-center px-8 text-center">
+                    <div className="max-w-6xl translate-y-[104px]">
+                      <button 
+                        onClick={() => setActiveTab("studio")}
+                        onMouseEnter={() => setIsButtonHovered(true)}
+                        onMouseLeave={() => setIsButtonHovered(false)}
+                        className={cn(
+                          "liquid-glass animate-fade-rise cursor-pointer rounded-full px-16 py-7 sm:px-22 sm:py-8 text-xl sm:text-3xl font-medium text-foreground transition-all duration-700 ease-out",
+                          isButtonHovered 
+                            ? "bg-[#FA003F] text-white shadow-[0_0_55px_rgba(250,0,63,0.85)] scale-[1.04]" 
+                            : "hover:scale-[1.03]"
+                        )}
                       >
-                        Where <em className="not-italic text-muted-foreground">vision</em> meets its <br className="hidden lg:block" />
-                        <em className="not-italic text-muted-foreground">fullest potential.</em>
-                      </h1>
-
-                      {/* Desktop only subtext and button (overlayed) */}
-                      <div className="hidden lg:block">
-                        <p className="animate-fade-rise-delay mx-auto mt-10 max-w-3xl text-xl leading-relaxed text-foreground/90">
-                          We build AI tools with the brightest creators and visual thinkers from concept to screen. 
-                          We produce imagery that makes ideas undeniable.
-                        </p>
-
-                        <button 
-                          onClick={() => setActiveTab("studio")}
-                          className="liquid-glass animate-fade-rise-delay-2 mt-16 cursor-pointer rounded-full px-16 py-6 text-lg font-medium text-foreground transition-transform hover:scale-[1.03]"
-                        >
-                          Begin Your Journey
-                        </button>
-                      </div>
-
-                      {/* Mobile only subtext and button (directly under heading) */}
-                      <div className="mt-8 block md:hidden">
-                        <p className="animate-fade-rise-delay mx-auto max-w-md text-base leading-relaxed text-foreground/90">
-                          We build AI tools with the brightest creators and visual thinkers from concept to screen. 
-                          We produce imagery that makes ideas undeniable.
-                        </p>
-
-                        <button 
-                          onClick={() => setActiveTab("studio")}
-                          className="liquid-glass animate-fade-rise-delay-2 mt-10 cursor-pointer rounded-full px-10 py-4 text-base font-medium text-foreground transition-transform hover:scale-[1.03]"
-                        >
-                          Begin Your Journey
-                        </button>
-                      </div>
+                        Begin Your Journey
+                      </button>
                     </div>
                   </main>
                 </>
@@ -268,10 +296,10 @@ export default function App() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
-                    className="max-w-4xl"
+                    className="max-w-full w-full px-4"
                   >
                     <h1 
-                      className="text-5xl font-normal tracking-tight text-foreground sm:text-7xl"
+                      className="text-[6.5rem] xs:text-[7.5rem] sm:text-[11.25rem] font-normal tracking-tighter text-foreground leading-[0.85] text-center"
                       style={{ fontFamily: "'Instrument Serif', serif" }}
                     >
                       The <span className="text-muted-foreground italic">Studio</span>
@@ -284,21 +312,7 @@ export default function App() {
               )}
             </div>
 
-            {activeTab === "home" && (
-              <div className="relative z-10 hidden flex-col items-center bg-transparent px-8 py-16 text-center md:flex lg:hidden">
-                <p className="animate-fade-rise-delay max-w-2xl text-base leading-relaxed text-foreground/90">
-                  We build AI tools with the brightest creators and visual thinkers from concept to screen. 
-                  We produce imagery that makes ideas undeniable.
-                </p>
 
-                <button 
-                  onClick={() => setActiveTab("studio")}
-                  className="liquid-glass animate-fade-rise-delay-2 mt-10 cursor-pointer rounded-full px-12 py-5 text-base font-medium text-foreground transition-transform hover:scale-[1.03]"
-                >
-                  Begin Your Journey
-                </button>
-              </div>
-            )}
 
             {activeTab === "studio" && (
               <section className="relative z-10 bg-transparent px-6 py-24 md:px-12">
@@ -432,120 +446,192 @@ export default function App() {
             )}
 
             {/* About Section - Improved Spacing & Framing */}
-            <section id="about" className="relative z-10 bg-transparent px-8 py-32 md:px-16 md:py-64">
-              <div className="mx-auto max-w-screen-2xl">
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8 }}
-                  className="mb-24 md:mb-32"
-                >
-                  <h2 
-                    className="text-4xl font-normal tracking-tight text-foreground sm:text-6xl md:text-8xl"
-                    style={{ fontFamily: "'Instrument Serif', serif" }}
-                  >
-                    The <span className="text-muted-foreground italic">Produced</span> Method
-                  </h2>
-                  <div className="mt-6 h-[1px] w-24 bg-muted-foreground md:mt-8 md:w-40" />
-                </motion.div>
-
-                <div className="grid gap-16 md:grid-cols-2 md:gap-24 lg:gap-32">
-                  {/* AI Studio */}
+            {activeTab === "studio" && (
+              <section id="about" className="relative z-10 bg-transparent px-8 py-32 md:px-16 md:py-64">
+                <div className="mx-auto max-w-screen-2xl">
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.1 }}
+                    transition={{ duration: 0.8 }}
+                    className="mb-24 md:mb-32"
                   >
-                    <h3 
-                      className="mb-4 text-2xl text-muted-foreground"
+                    <h2 
+                      className="text-4xl font-normal tracking-tight text-foreground sm:text-6xl md:text-8xl"
                       style={{ fontFamily: "'Instrument Serif', serif" }}
                     >
-                      AI Studio
-                    </h3>
-                    <p className="text-base leading-relaxed text-foreground/70">
-                      This is where ideas get their first breath. Our AI Studio is not a tool it's an environment. 
-                      A purpose-built creative space where generative models are curated, conditioned, and directed by human sensibility. 
-                      We don't hand you a prompt box. We build a visual language around your project, fine-tuning outputs until 
-                      every frame feels intentional, consistent, and unmistakably yours. The machine learns your aesthetic. 
-                      Then it works for it.
-                    </p>
+                      The <span className="text-muted-foreground italic">Produced</span> Method
+                    </h2>
+                    <div className="mt-6 h-[1px] w-24 bg-muted-foreground md:mt-8 md:w-40" />
                   </motion.div>
 
-                  {/* Storyboard Pre-Visualization */}
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                  >
-                    <h3 
-                      className="mb-4 text-2xl text-muted-foreground"
-                      style={{ fontFamily: "'Instrument Serif', serif" }}
+                  <div className="grid gap-6 sm:grid-cols-2 max-w-6xl mx-auto">
+                    {/* AI Studio */}
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: 0.1 }}
+                      className="group relative aspect-square rounded-[2rem] bg-zinc-900/35 border border-zinc-200/5 backdrop-blur-xl p-6 xs:p-8 sm:p-10 md:p-12 flex flex-col justify-start hover:bg-zinc-900/50 hover:border-zinc-200/10 hover:shadow-[0_0_50px_rgba(250,0,63,0.05)] transition-all duration-500 overflow-hidden"
                     >
-                      Storyboard Pre-Visualization
-                    </h3>
-                    <p className="text-base leading-relaxed text-foreground/70">
-                      Before a single light is rigged or a location is scouted, the film should already exist in your mind and on the page. 
-                      We collapse weeks of traditional pre-production into days, producing full cinematic pre-viz sequences that let 
-                      directors make their big decisions before they're expensive. Shot composition. Camera movement. 
-                      Lighting scenarios. Action beats. Rendered at near-photographic fidelity, so what arrives on set is confidence.
-                    </p>
-                  </motion.div>
+                      <div>
+                        <span className="font-mono text-[9px] sm:text-xs text-[#FA003F] tracking-[0.25em] font-medium block mb-2 sm:mb-4">01 // PIPELINE</span>
+                        <h3 
+                          className="text-2xl sm:text-3xl lg:text-4xl text-foreground font-normal tracking-tight group-hover:text-[#FA003F] transition-colors duration-300"
+                          style={{ fontFamily: "'Instrument Serif', serif" }}
+                        >
+                          AI Studio
+                        </h3>
+                      </div>
+                      <p className="text-xl xs:text-2xl sm:text-base md:text-lg lg:text-xl xl:text-2xl leading-normal text-foreground/90 mt-4 sm:mt-6">
+                        This is where ideas get their first breath. Our AI Studio is not a tool—it's an environment. 
+                        A purpose-built creative space where generative models are curated, conditioned, and directed by human sensibility. 
+                        We don't hand you a prompt box. We build a visual language around your project, fine-tuning outputs until 
+                        every frame feels intentional, consistent, and unmistakably yours.
+                      </p>
+                    </motion.div>
 
-                  {/* Concept Imagery */}
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.3 }}
-                  >
-                    <h3 
-                      className="mb-4 text-2xl text-muted-foreground"
-                      style={{ fontFamily: "'Instrument Serif', serif" }}
+                    {/* Storyboard Pre-Visualization */}
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: 0.2 }}
+                      className="group relative aspect-square rounded-[2rem] bg-zinc-900/35 border border-zinc-200/5 backdrop-blur-xl p-6 xs:p-8 sm:p-10 md:p-12 flex flex-col justify-start hover:bg-zinc-900/50 hover:border-zinc-200/10 hover:shadow-[0_0_50px_rgba(250,0,63,0.05)] transition-all duration-500 overflow-hidden"
                     >
-                      Concept Imagery
-                    </h3>
-                    <p className="text-base leading-relaxed text-foreground/70">
-                      The hardest thing to sell is a feeling. We make it visible. From campaign pitches to full feature development, 
-                      we generate and iterate on concept art, mood boards, character studies, and world environments giving 
-                      stakeholders something real to react to before a single frame is committed to production. 
-                      Ideation at the speed of thought. Refinement at the pace of conversation.
-                    </p>
-                  </motion.div>
+                      <div>
+                        <span className="font-mono text-[9px] sm:text-xs text-[#FA003F] tracking-[0.25em] font-medium block mb-2 sm:mb-4">02 // STRATEGY</span>
+                        <h3 
+                          className="text-2xl sm:text-3xl lg:text-4xl text-foreground font-normal tracking-tight group-hover:text-[#FA003F] transition-colors duration-300"
+                          style={{ fontFamily: "'Instrument Serif', serif" }}
+                        >
+                          Storyboard Pre-Viz
+                        </h3>
+                      </div>
+                      <p className="text-xl xs:text-2xl sm:text-base md:text-lg lg:text-xl xl:text-2xl leading-normal text-foreground/90 mt-4 sm:mt-6">
+                        Before a single light is rigged or a location is scouted, the film should already exist in your mind and on the page. 
+                        We collapse weeks of traditional pre-production into days, producing full cinematic pre-viz sequences that let 
+                        directors make their big decisions before they're expensive. Shot composition, lighting scenarios, and camera movement.
+                      </p>
+                    </motion.div>
 
-                  {/* Video Direction */}
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.4 }}
-                  >
-                    <h3 
-                      className="mb-4 text-2xl text-muted-foreground"
-                      style={{ fontFamily: "'Instrument Serif', serif" }}
+                    {/* Concept Imagery */}
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: 0.3 }}
+                      className="group relative aspect-square rounded-[2rem] bg-zinc-900/35 border border-zinc-200/5 backdrop-blur-xl p-6 xs:p-8 sm:p-10 md:p-12 flex flex-col justify-start hover:bg-zinc-900/50 hover:border-zinc-200/10 hover:shadow-[0_0_50px_rgba(250,0,63,0.05)] transition-all duration-500 overflow-hidden"
                     >
-                      Video Direction
-                    </h3>
-                    <p className="text-base leading-relaxed text-foreground/70">
-                      From treatment to final cut, we direct with AI woven into the entire pipeline not bolted on at the end. 
-                      We develop treatment documents illustrated with AI-rendered reference imagery. We supervise production 
-                      informed by pre-viz. We guide post with AI-assisted color, compositing, and motion to ensure the story 
-                      that was conceived is the story that gets told. Every decision made earlier. Every vision delivered cleaner.
-                    </p>
-                  </motion.div>
+                      <div>
+                        <span className="font-mono text-[9px] sm:text-xs text-[#FA003F] tracking-[0.25em] font-medium block mb-2 sm:mb-4">03 // CONCEPTUAL</span>
+                        <h3 
+                          className="text-2xl sm:text-3xl lg:text-4xl text-foreground font-normal tracking-tight group-hover:text-[#FA003F] transition-colors duration-300"
+                          style={{ fontFamily: "'Instrument Serif', serif" }}
+                        >
+                          Concept Imagery
+                        </h3>
+                      </div>
+                      <p className="text-xl xs:text-2xl sm:text-base md:text-lg lg:text-xl xl:text-2xl leading-normal text-foreground/90 mt-4 sm:mt-6">
+                        The hardest thing to sell is a feeling. We make it visible. From campaign pitches to full feature development, 
+                        we generate and iterate on concept art, mood boards, character studies, and world environments, giving 
+                        stakeholders something real to react to before a single frame is committed to production. Ideation at the speed of thought.
+                      </p>
+                    </motion.div>
+
+                    {/* Video Direction */}
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: 0.4 }}
+                      className="group relative aspect-square rounded-[2rem] bg-zinc-900/35 border border-zinc-200/5 backdrop-blur-xl p-6 xs:p-8 sm:p-10 md:p-12 flex flex-col justify-start hover:bg-zinc-900/50 hover:border-zinc-200/10 hover:shadow-[0_0_50px_rgba(250,0,63,0.05)] transition-all duration-500 overflow-hidden"
+                    >
+                      <div>
+                        <span className="font-mono text-[9px] sm:text-xs text-[#FA003F] tracking-[0.25em] font-medium block mb-2 sm:mb-4">04 // DIRECTION</span>
+                        <h3 
+                          className="text-2xl sm:text-3xl lg:text-4xl text-foreground font-normal tracking-tight group-hover:text-[#FA003F] transition-colors duration-300"
+                          style={{ fontFamily: "'Instrument Serif', serif" }}
+                        >
+                          Video Direction
+                        </h3>
+                      </div>
+                      <p className="text-xl xs:text-2xl sm:text-base md:text-lg lg:text-xl xl:text-2xl leading-normal text-foreground/90 mt-4 sm:mt-6">
+                        From treatment to final cut, we direct with AI woven into the entire pipeline, not bolted on at the end. 
+                        We develop treatments illustrated with AI-rendered reference imagery, supervise production informed by pre-viz, 
+                        and guide post-production with AI-assisted color, compositing, and motion.
+                      </p>
+                    </motion.div>
+                  </div>
                 </div>
-              </div>
-            </section>
+              </section>
+            )}
+
+            {/* Page extension spacer to push the footer down by 6 inches */}
+            <div className="relative z-10 h-[6in] w-full" />
 
             {/* Footer / Bottom details */}
-            <div className="relative z-10 px-8 py-12">
+            <div className={cn(
+              "relative z-10 px-8 py-12 transition-all",
+              (activeTab === "home" && isButtonHovered) 
+                ? "filter grayscale-[100%] duration-[1200ms] ease-out" 
+                : "duration-[2500ms] ease-out"
+            )}>
               <div className="mx-auto flex max-w-7xl items-center gap-4">
                 <div className="h-[1px] w-8 bg-muted-foreground" />
                 <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
                   Est. 2026 — Built for the quiet ones
                 </p>
+              </div>
+            </div>
+
+            {/* Blank Red Footer */}
+            <div 
+              id="blank-brand-footer"
+              className={cn(
+                "relative z-10 w-full bg-[#FA003F] h-[3in] flex items-center justify-between pl-2 md:pl-4 pr-8 md:pr-16 transition-all overflow-hidden",
+                (activeTab === "home" && isButtonHovered) 
+                  ? "filter grayscale-[100%] duration-[1200ms] ease-out" 
+                  : "duration-[2500ms] ease-out"
+              )}
+            >
+              <img 
+                src="https://imglink.cc/cdn/XbDN_VXquQ.svg" 
+                alt="Footer Graphic" 
+                className="h-[2.4in] w-auto object-contain flex-shrink-0"
+                referrerPolicy="no-referrer"
+              />
+
+              {/* Creative Studio Footer Content on the Right */}
+              <div className="hidden sm:flex items-center h-full flex-shrink-0 mr-12 md:mr-32 lg:mr-48">
+                <div className="flex gap-16 text-right">
+                  {/* Studio Link */}
+                  <div className="flex flex-col gap-1.5">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-white/50 mb-0.5">Explore</p>
+                    <a 
+                      href="#studio" 
+                      onClick={(e) => { 
+                        e.preventDefault(); 
+                        setActiveTab("studio"); 
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                      className="font-sans text-sm font-semibold text-white hover:text-white/80 transition-colors hover:underline underline-offset-4"
+                    >
+                      Studio
+                    </a>
+                  </div>
+
+                  {/* Contact Link */}
+                  <div className="flex flex-col gap-1.5">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-white/50 mb-0.5">Contact</p>
+                    <a 
+                      href="mailto:theproducedstudio@gmail.com" 
+                      className="font-sans text-sm font-semibold text-white hover:text-white/80 transition-colors hover:underline underline-offset-4"
+                    >
+                      Get in touch
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
