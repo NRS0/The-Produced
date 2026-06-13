@@ -57,6 +57,12 @@ export default function App() {
   };
 
   useEffect(() => {
+    // Preload branding assets immediately to solve network latency lag on production servers
+    const img1 = new Image();
+    img1.src = "https://i.ibb.co/ksH2WLYk/THE-PRODUCED-LOGO-RED.png";
+    const img2 = new Image();
+    img2.src = "https://imglink.cc/cdn/vSFMkujUJV.png";
+
     // Start flicker and background transition at 1.8s
     const flickerTimer = setTimeout(() => {
       setFlicker(true);
@@ -96,34 +102,38 @@ export default function App() {
                 scale: 1,
                 transition: { duration: 1.2, ease: "easeOut" }
               }}
-              className="relative"
+              className="relative flex items-center justify-center w-64 md:w-96 h-32 md:h-48"
             >
-              <AnimatePresence mode="wait">
-                {!flicker ? (
-                  <motion.img 
-                    key="logo-1"
-                    initial={{ opacity: 1 }}
-                    exit={{ opacity: 0, transition: { duration: 0.1 } }}
-                    src="https://i.ibb.co/ksH2WLYk/THE-PRODUCED-LOGO-RED.png" 
-                    alt="Produced Logo" 
-                    className="h-32 w-auto object-contain md:h-48"
-                    referrerPolicy="no-referrer"
-                  />
-                ) : (
-                  <motion.img 
-                    key="logo-2"
-                    initial={{ opacity: 0 }}
-                    animate={{ 
-                      opacity: [0, 1, 0.5, 1],
-                      transition: { duration: 0.3, times: [0, 0.2, 0.5, 1] }
-                    }}
-                    src="https://imglink.cc/cdn/vSFMkujUJV.png" 
-                    alt="Produced Logo Flicker" 
-                    className="h-32 w-auto object-contain md:h-48"
-                    referrerPolicy="no-referrer"
-                  />
-                )}
-              </AnimatePresence>
+              {/* Logo 1: Static Red Logo */}
+              <motion.img 
+                src="https://i.ibb.co/ksH2WLYk/THE-PRODUCED-LOGO-RED.png" 
+                alt="Produced Logo" 
+                className="h-full w-auto object-contain"
+                referrerPolicy="no-referrer"
+                animate={{
+                  opacity: !flicker ? 1 : 0
+                }}
+                transition={{
+                  duration: flicker ? 0.05 : 0.3
+                }}
+              />
+
+              {/* Logo 2: Flickering White/Alternate Logo Layer */}
+              <motion.img 
+                src="https://imglink.cc/cdn/vSFMkujUJV.png" 
+                alt="Produced Logo Flicker" 
+                className="absolute inset-0 h-full w-auto mx-auto object-contain"
+                referrerPolicy="no-referrer"
+                initial={{ opacity: 0 }}
+                animate={{ 
+                  opacity: flicker ? [0, 1, 0.5, 1] : 0
+                }}
+                transition={{
+                  duration: 0.35,
+                  times: [0, 0.2, 0.5, 1]
+                }}
+              />
+
               {/* Subtle pulsing glow effect */}
               <motion.div 
                 animate={{ 
