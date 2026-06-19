@@ -18,6 +18,7 @@ export default function App() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
+  const [loadedImages, setLoadedImages] = useState<Record<number, boolean>>({});
 
   const handleAboutClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -62,6 +63,22 @@ export default function App() {
     img1.src = "https://i.ibb.co/ksH2WLYk/THE-PRODUCED-LOGO-RED.png";
     const img2 = new Image();
     img2.src = "https://imglink.cc/cdn/vSFMkujUJV.png";
+
+    // Preload leading gallery content asynchronously during the 2.8s preloader window for instant cache lookup
+    const preloads = [
+      "https://imglink.cc/cdn/i4VolVOCwH.png",
+      "https://imglink.cc/cdn/p-9D0eKdmo.png",
+      "https://imglink.cc/cdn/k127j8cU43.png",
+      "https://imglink.cc/cdn/YjTe4ZiXr5.png",
+      "https://imglink.cc/cdn/Y4_62nUHLs.png",
+      "https://imglink.cc/cdn/FYBooA1NNV.png",
+      "https://imglink.cc/cdn/9ze7x1WG95.png",
+      "https://imglink.cc/cdn/ILU0UtwJCg.png"
+    ];
+    preloads.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
 
     // Start flicker and background transition at 1.8s
     const flickerTimer = setTimeout(() => {
@@ -426,7 +443,14 @@ export default function App() {
                             <img 
                               src={item.type === 'video' ? (item as any).thumbnail : (item as any).url} 
                               alt={item.title || `Studio work ${idx + 1}`} 
-                              className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
+                              loading="lazy"
+                              onLoad={() => {
+                                setLoadedImages(prev => ({ ...prev, [idx]: true }));
+                              }}
+                              className={cn(
+                                "h-full w-full object-cover object-center transition-all duration-[1200ms] ease-out group-hover:scale-110",
+                                loadedImages[idx] ? "opacity-100 filter-none" : "opacity-0 filter blur-md scale-[1.01]"
+                              )}
                               referrerPolicy="no-referrer"
                             />
                           )}
