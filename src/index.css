@@ -31,18 +31,71 @@
   --border: 0 0% 18%;
   --input: 0 0% 18%;
   --radius: 0.5rem;
+
+  /* Color-scheme dark triggers native dark scrollbars and prevents white flickering across browsers */
+  color-scheme: dark;
+  
+  /* Prevent font resizing adjustments after orientation changes on mobile */
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+
+  /* High contrast font rendering and smoothing definitions for Windows & macOS subpixels */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  
+  /* Disable blue high-outline tap-highlight colors on Android Chrome and iOS Safari */
+  -webkit-tap-highlight-color: transparent;
 }
 
 @layer base {
   * {
     @apply border-border;
+    box-sizing: border-box;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   body {
     @apply bg-background text-foreground font-body overflow-x-hidden;
+    background-color: #000000;
+    color: #ffffff;
   }
   html {
     @apply overflow-x-hidden;
     scroll-behavior: smooth;
+    background-color: #000000;
+    color: #ffffff;
+    
+    /* Cross-browser Scrollbars: standard Firefox declaration */
+    scrollbar-color: #222222 #000000;
+    scrollbar-width: thin;
+  }
+
+  /* Custom Webkit/Blink Scrollbars for polished Chrome, Safari, Edge consistency */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #000000;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #222222;
+    border-radius: 10px;
+    transition: background 0.3s ease;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #FA003F;
+  }
+
+  /* Optimize graphics and image rendering across modern browsers */
+  img, svg, canvas {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: auto;
+    shape-rendering: geometricPrecision;
+    -webkit-user-drag: none;
   }
 }
 
@@ -70,6 +123,8 @@
       rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
+    -webkit-mask-composite: destination-out;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask-composite: exclude;
     pointer-events: none;
   }
