@@ -60,7 +60,12 @@ export const GrassField: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef2D = useRef<HTMLCanvasElement>(null);
   const rendererRef = useRef<THREE.WebGPURenderer | null>(null);
-  const [useFallback, setUseFallback] = useState(false);
+  const [useFallback, setUseFallback] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    // Safari-specific regex to identify desktop & mobile Safari (while filtering Chromium wrappers & Firefox)
+    const isSafari = /^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent);
+    return isSafari;
+  });
 
   // --- Fallback Ambient Cinematic Particles (Runs smoothly on unsupported/mobile environments) ---
   useEffect(() => {
