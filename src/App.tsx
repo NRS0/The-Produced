@@ -10,6 +10,84 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Menu, X, Play } from "lucide-react";
 
+interface GalleryItem {
+  type?: "image" | "video";
+  url: string;
+  span: string;
+  thumbnail?: string;
+  title?: string;
+  label?: string;
+}
+
+const GALLERY_ITEMS: GalleryItem[] = [
+  { url: "https://imglink.cc/cdn/i4VolVOCwH.png", span: "lg:col-span-4 h-[350px]" },
+  { url: "https://imglink.cc/cdn/p-9D0eKdmo.png", span: "lg:col-span-4 h-[350px]" },
+  { url: "https://imglink.cc/cdn/k127j8cU43.png", span: "lg:col-span-4 h-[350px]" },
+  { url: "https://imglink.cc/cdn/YjTe4ZiXr5.png", span: "lg:col-span-6 h-[450px]" },
+  { url: "https://imglink.cc/cdn/Y4_62nUHLs.png", span: "lg:col-span-6 h-[450px]" },
+  { url: "https://imglink.cc/cdn/FYBooA1NNV.png", span: "lg:col-span-4 h-[350px]" },
+  { url: "https://imglink.cc/cdn/9ze7x1WG95.png", span: "lg:col-span-4 h-[350px]" },
+  { url: "https://imglink.cc/cdn/ILU0UtwJCg.png", span: "lg:col-span-4 h-[350px]" },
+  { url: "https://imglink.cc/cdn/qXxECeZ0C2.png", span: "lg:col-span-7 h-[500px]" },
+  { url: "https://imglink.cc/cdn/qx4sGUX1wq.png", span: "lg:col-span-5 h-[500px]" },
+  { url: "https://imglink.cc/cdn/VHNeQLJedx.png", span: "lg:col-span-5 h-[450px]" },
+  { url: "https://imglink.cc/cdn/Rc_KJMFdyJ.png", span: "lg:col-span-7 h-[450px]" },
+  { url: "https://imglink.cc/cdn/B5ZEUqV4_z.png", span: "lg:col-span-4 h-[400px]" },
+  { url: "https://imglink.cc/cdn/Z4THW8pMu3.png", span: "lg:col-span-4 h-[400px]", title: "Shadow Play", label: "Special Edition" },
+  { 
+    type: "video", 
+    url: "https://imglink.cc/cdn/Gfmr_WcAAS.mov", 
+    span: "lg:col-span-4 h-[400px]", 
+    title: "The Vision", 
+    label: "Latest Work" 
+  },
+  // 7 New Highly Curated Cinematic Pieces positioned precisely in the center of the grid sequence
+  { url: "https://imglink.cc/cdn/hbQLjFyZQa.png", span: "lg:col-span-4 h-[350px]" },
+  { url: "https://imglink.cc/cdn/o6Oe4mAz2a.png", span: "lg:col-span-4 h-[350px]" },
+  { url: "https://imglink.cc/cdn/EXJTwSqTVf.png", span: "lg:col-span-4 h-[350px]" },
+  { url: "https://imglink.cc/cdn/yMCZgaiHVS.png", span: "lg:col-span-6 h-[400px]" },
+  { url: "https://imglink.cc/cdn/kch-jo82xs.png", span: "lg:col-span-6 h-[400px]" },
+  { url: "https://imglink.cc/cdn/znyg-gAHAO.png", span: "lg:col-span-8 h-[450px]" },
+  { url: "https://imglink.cc/cdn/InPChUhFq6.png", span: "lg:col-span-4 h-[450px]" },
+  { url: "https://imglink.cc/cdn/y80-LceSWj.png", span: "lg:col-span-8 h-[550px]" },
+  { 
+    type: "video", 
+    url: "https://player.mux.com/HWhd6N8GWY01PJ005XjQW3j9nDJPqKBr5101UihwRE3WuU?metadata-video-title=The+Call&video-title=The+Call", 
+    thumbnail: "https://image.mux.com/HWhd6N8GWY01PJ005XjQW3j9nDJPqKBr5101UihwRE3WuU/thumbnail.jpg?time=0",
+    span: "lg:col-span-4 h-[550px]", 
+    title: "The Call", 
+    label: "Featured Film" 
+  },
+  { url: "https://imglink.cc/cdn/hWTYlP7XGI.png", span: "lg:col-span-12 h-[700px]", title: "Neon Noir", label: "Project 01" },
+  { url: "https://imglink.cc/cdn/QHnVs04CXH.png", span: "lg:col-span-4 h-[300px]" },
+  { 
+    type: "video", 
+    url: "https://player.mux.com/oX9d02YHnSI7n95TwzzNxjdLWtqP01pIZiAidQSwySpaI?metadata-video-title=The+Chase&video-title=The+Chase", 
+    thumbnail: "https://image.mux.com/oX9d02YHnSI7n95TwzzNxjdLWtqP01pIZiAidQSwySpaI/thumbnail.jpg?time=0",
+    span: "lg:col-span-4 h-[300px]", 
+    title: "The Chase", 
+    label: "Short Film" 
+  },
+  { 
+    type: "video", 
+    url: "https://player.mux.com/teBfiaqKP5kzSdda2ZetxU9nz4dTXNLiXRYSRl4YUnc?metadata-video-title=The+Clash&video-title=The+Clash", 
+    thumbnail: "https://image.mux.com/teBfiaqKP5kzSdda2ZetxU9nz4dTXNLiXRYSRl4YUnc/thumbnail.jpg?time=0",
+    span: "lg:col-span-4 h-[300px]", 
+    title: "The Clash", 
+    label: "Cinematic" 
+  },
+  { url: "https://imglink.cc/cdn/dbAYmRkrxD.png", span: "lg:col-span-6 h-[500px]", title: "Ethereal Planes", label: "Project 02" },
+  { url: "https://imglink.cc/cdn/Ww6ZI1SfCY.png", span: "lg:col-span-6 h-[500px]" },
+  { url: "https://imglink.cc/cdn/sdNwHfScgn.png", span: "lg:col-span-4 h-[300px]" },
+  { url: "https://imglink.cc/cdn/CD42-c1O4o.png", span: "lg:col-span-8 h-[300px]" },
+  { url: "https://imglink.cc/cdn/-WbZc0sMQg.png", span: "lg:col-span-4 h-[300px]" },
+  { url: "https://imglink.cc/cdn/Pgaq9urVTq.png", span: "lg:col-span-5 h-[400px]" },
+  { url: "https://imglink.cc/cdn/7AEBBdspSa.jpg", span: "lg:col-span-7 h-[400px]" },
+  { url: "https://imglink.cc/cdn/z3dNzqcNoi.jpg", span: "lg:col-span-6 h-[350px]" },
+  { url: "https://imglink.cc/cdn/Q3-PjdGrH4.png", span: "lg:col-span-6 h-[350px]" },
+  { url: "https://imglink.cc/cdn/iiWkIbKyBX.png", span: "lg:col-span-12 h-[300px]" }
+];
+
 export default function App() {
   const [loading, setLoading] = useState(true);
   const [flicker, setFlicker] = useState(false);
@@ -64,20 +142,13 @@ export default function App() {
     const img2 = new Image();
     img2.src = "https://imglink.cc/cdn/vSFMkujUJV.png";
 
-    // Preload leading gallery content asynchronously during the 2.8s preloader window for instant cache lookup
-    const preloads = [
-      "https://imglink.cc/cdn/i4VolVOCwH.png",
-      "https://imglink.cc/cdn/p-9D0eKdmo.png",
-      "https://imglink.cc/cdn/k127j8cU43.png",
-      "https://imglink.cc/cdn/YjTe4ZiXr5.png",
-      "https://imglink.cc/cdn/Y4_62nUHLs.png",
-      "https://imglink.cc/cdn/FYBooA1NNV.png",
-      "https://imglink.cc/cdn/9ze7x1WG95.png",
-      "https://imglink.cc/cdn/ILU0UtwJCg.png"
-    ];
-    preloads.forEach(src => {
-      const img = new Image();
-      img.src = src;
+    // Preload ALL gallery content asynchronously during the 2.8s preloader window for instant browser cache lookups
+    GALLERY_ITEMS.forEach(item => {
+      const src = item.type === 'video' ? item.thumbnail : item.url;
+      if (src) {
+        const img = new Image();
+        img.src = src;
+      }
     });
 
     // Start flicker and background transition at 1.8s
@@ -345,66 +416,7 @@ export default function App() {
               <section className="relative z-10 bg-transparent px-6 py-24 md:px-12">
                 <div className="mx-auto max-w-screen-2xl">
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-12">
-                    {[
-                      { url: "https://imglink.cc/cdn/i4VolVOCwH.png", span: "lg:col-span-4 h-[350px]" },
-                      { url: "https://imglink.cc/cdn/p-9D0eKdmo.png", span: "lg:col-span-4 h-[350px]" },
-                      { url: "https://imglink.cc/cdn/k127j8cU43.png", span: "lg:col-span-4 h-[350px]" },
-                      { url: "https://imglink.cc/cdn/YjTe4ZiXr5.png", span: "lg:col-span-6 h-[450px]" },
-                      { url: "https://imglink.cc/cdn/Y4_62nUHLs.png", span: "lg:col-span-6 h-[450px]" },
-                      { url: "https://imglink.cc/cdn/FYBooA1NNV.png", span: "lg:col-span-4 h-[350px]" },
-                      { url: "https://imglink.cc/cdn/9ze7x1WG95.png", span: "lg:col-span-4 h-[350px]" },
-                      { url: "https://imglink.cc/cdn/ILU0UtwJCg.png", span: "lg:col-span-4 h-[350px]" },
-                      { url: "https://imglink.cc/cdn/qXxECeZ0C2.png", span: "lg:col-span-7 h-[500px]" },
-                      { url: "https://imglink.cc/cdn/qx4sGUX1wq.png", span: "lg:col-span-5 h-[500px]" },
-                      { url: "https://imglink.cc/cdn/VHNeQLJedx.png", span: "lg:col-span-5 h-[450px]" },
-                      { url: "https://imglink.cc/cdn/Rc_KJMFdyJ.png", span: "lg:col-span-7 h-[450px]" },
-                      { url: "https://imglink.cc/cdn/B5ZEUqV4_z.png", span: "lg:col-span-4 h-[400px]" },
-                      { url: "https://imglink.cc/cdn/Z4THW8pMu3.png", span: "lg:col-span-4 h-[400px]", title: "Shadow Play", label: "Special Edition" },
-                      { 
-                        type: "video", 
-                        url: "https://imglink.cc/cdn/Gfmr_WcAAS.mov", 
-                        span: "lg:col-span-4 h-[400px]", 
-                        title: "The Vision", 
-                        label: "Latest Work" 
-                      },
-                      { url: "https://imglink.cc/cdn/y80-LceSWj.png", span: "lg:col-span-8 h-[550px]" },
-                      { 
-                        type: "video", 
-                        url: "https://player.mux.com/HWhd6N8GWY01PJ005XjQW3j9nDJPqKBr5101UihwRE3WuU?metadata-video-title=The+Call&video-title=The+Call", 
-                        thumbnail: "https://image.mux.com/HWhd6N8GWY01PJ005XjQW3j9nDJPqKBr5101UihwRE3WuU/thumbnail.jpg?time=0",
-                        span: "lg:col-span-4 h-[550px]", 
-                        title: "The Call", 
-                        label: "Featured Film" 
-                      },
-                      { url: "https://imglink.cc/cdn/hWTYlP7XGI.png", span: "lg:col-span-12 h-[700px]", title: "Neon Noir", label: "Project 01" },
-                      { url: "https://imglink.cc/cdn/QHnVs04CXH.png", span: "lg:col-span-4 h-[300px]" },
-                      { 
-                        type: "video", 
-                        url: "https://player.mux.com/oX9d02YHnSI7n95TwzzNxjdLWtqP01pIZiAidQSwySpaI?metadata-video-title=The+Chase&video-title=The+Chase", 
-                        thumbnail: "https://image.mux.com/oX9d02YHnSI7n95TwzzNxjdLWtqP01pIZiAidQSwySpaI/thumbnail.jpg?time=0",
-                        span: "lg:col-span-4 h-[300px]", 
-                        title: "The Chase", 
-                        label: "Short Film" 
-                      },
-                      { 
-                        type: "video", 
-                        url: "https://player.mux.com/teBfiaqKP5kzSdda2ZetxU9nz4dTXNLiXRYSRl4YUnc?metadata-video-title=The+Clash&video-title=The+Clash", 
-                        thumbnail: "https://image.mux.com/teBfiaqKP5kzSdda2ZetxU9nz4dTXNLiXRYSRl4YUnc/thumbnail.jpg?time=0",
-                        span: "lg:col-span-4 h-[300px]", 
-                        title: "The Clash", 
-                        label: "Cinematic" 
-                      },
-                      { url: "https://imglink.cc/cdn/dbAYmRkrxD.png", span: "lg:col-span-6 h-[500px]", title: "Ethereal Planes", label: "Project 02" },
-                      { url: "https://imglink.cc/cdn/Ww6ZI1SfCY.png", span: "lg:col-span-6 h-[500px]" },
-                      { url: "https://imglink.cc/cdn/sdNwHfScgn.png", span: "lg:col-span-4 h-[300px]" },
-                      { url: "https://imglink.cc/cdn/CD42-c1O4o.png", span: "lg:col-span-8 h-[300px]" },
-                      { url: "https://imglink.cc/cdn/-WbZc0sMQg.png", span: "lg:col-span-4 h-[300px]" },
-                      { url: "https://imglink.cc/cdn/Pgaq9urVTq.png", span: "lg:col-span-5 h-[400px]" },
-                      { url: "https://imglink.cc/cdn/7AEBBdspSa.jpg", span: "lg:col-span-7 h-[400px]" },
-                      { url: "https://imglink.cc/cdn/z3dNzqcNoi.jpg", span: "lg:col-span-6 h-[350px]" },
-                      { url: "https://imglink.cc/cdn/Q3-PjdGrH4.png", span: "lg:col-span-6 h-[350px]" },
-                      { url: "https://imglink.cc/cdn/iiWkIbKyBX.png", span: "lg:col-span-12 h-[300px]" }
-                    ].map((item, idx) => {
+                    {GALLERY_ITEMS.map((item, idx) => {
                       const isDirectVideo = item.type === 'video' && (item.url?.toLowerCase().endsWith('.mov') || item.url?.toLowerCase().endsWith('.mp4'));
                       
                       return (
