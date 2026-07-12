@@ -88,6 +88,100 @@ const GALLERY_ITEMS: GalleryItem[] = [
   { url: "https://imglink.cc/cdn/iiWkIbKyBX.png", span: "lg:col-span-12 h-[300px]" }
 ];
 
+const STAGGER = 0.035;
+
+export const TextRoll: React.FC<{
+  children: string;
+  className?: string;
+  center?: boolean;
+}> = ({ children, className, center = false }) => {
+  return (
+    <motion.span
+      initial="initial"
+      whileHover="hovered"
+      className={cn("relative block overflow-hidden", className)}
+      style={{
+        lineHeight: 0.75,
+      }}
+    >
+      <div>
+        {children.split("").map((l, i) => {
+          const delay = center
+            ? STAGGER * Math.abs(i - (children.length - 1) / 2)
+            : STAGGER * i;
+
+          return (
+            <motion.span
+              variants={{
+                initial: {
+                  y: 0,
+                },
+                hovered: {
+                  y: "-100%",
+                },
+              }}
+              transition={{
+                ease: "easeInOut",
+                delay,
+              }}
+              className="inline-block"
+              key={i}
+            >
+              {l === " " ? "\u00A0" : l}
+            </motion.span>
+          );
+        })}
+      </div>
+      <div className="absolute inset-0">
+        {children.split("").map((l, i) => {
+          const delay = center
+            ? STAGGER * Math.abs(i - (children.length - 1) / 2)
+            : STAGGER * i;
+
+          return (
+            <motion.span
+              variants={{
+                initial: {
+                  y: "100%",
+                },
+                hovered: {
+                  y: 0,
+                },
+              }}
+              transition={{
+                ease: "easeInOut",
+                delay,
+              }}
+              className="inline-block"
+              key={i}
+            >
+              {l === " " ? "\u00A0" : l}
+            </motion.span>
+          );
+        })}
+      </div>
+    </motion.span>
+  );
+};
+
+const navigationItems = [
+  {
+    name: "Home",
+    href: "/",
+    description: "[0]",
+  },
+  {
+    name: "Studio",
+    href: "/studio",
+    description: "[1]",
+  },
+  {
+    name: "About",
+    href: "/about",
+    description: "[2]",
+  }
+];
+
 export default function App() {
   const [loading, setLoading] = useState(true);
   const [flicker, setFlicker] = useState(false);
@@ -133,6 +227,23 @@ export default function App() {
         aboutSec.scrollIntoView({ behavior: "smooth" });
       }
     }
+  };
+
+  const handleNavItemClick = (name: string) => {
+    if (name === "Home") {
+      setActiveTab("home");
+    } else if (name === "Studio") {
+      setActiveTab("studio");
+    } else if (name === "About") {
+      setActiveTab("studio");
+      setTimeout(() => {
+        const aboutSec = document.getElementById("about");
+        if (aboutSec) {
+          aboutSec.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 150);
+    }
+    setIsMenuOpen(false);
   };
 
   useEffect(() => {
@@ -267,104 +378,41 @@ export default function App() {
                   ? "filter grayscale-[100%] brightness-[0.8] duration-[1200ms] ease-out" 
                   : "duration-[2500ms] ease-out"
               )}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <img 
-                      src="https://i.ibb.co/ksH2WLYk/THE-PRODUCED-LOGO-RED.png" 
-                      alt="Produced Logo" 
-                      className="h-10 w-auto object-contain md:h-14"
-                      referrerPolicy="no-referrer"
-                    />
+                <div className="grid grid-cols-3 items-center w-full">
+                  <div className="flex justify-start">
+                    <button 
+                      onClick={() => setIsMenuOpen(true)}
+                      className="cursor-pointer transition-transform active:scale-95 focus:outline-none"
+                    >
+                      <img 
+                        src="https://i.ibb.co/ksH2WLYk/THE-PRODUCED-LOGO-RED.png" 
+                        alt="Produced Logo" 
+                        className="h-10 w-auto object-contain md:h-14"
+                        referrerPolicy="no-referrer"
+                      />
+                    </button>
                   </div>
 
-                  {/* Desktop Menu */}
-                  <div className="hidden items-center gap-12 lg:flex">
+                  {/* Responsive Menu trigger in the center */}
+                  <div className="flex justify-center">
                     <button 
-                      onClick={() => setActiveTab("home")}
-                      className={cn(
-                        "text-sm font-medium tracking-wide transition-colors hover:text-muted-foreground",
-                        activeTab === "home" ? "text-foreground" : "text-muted-foreground/80"
-                      )}
+                      onClick={() => setIsMenuOpen(true)}
+                      className="group hidden md:flex items-center justify-center text-xs font-semibold tracking-[0.25em] uppercase text-white hover:text-[#FA003F] transition-all cursor-pointer p-2"
                     >
-                      Home
+                      <TextRoll>MENU</TextRoll>
                     </button>
-                    <button 
-                      onClick={() => setActiveTab("studio")}
-                      className={cn(
-                        "text-sm font-medium tracking-wide transition-colors hover:text-muted-foreground",
-                        activeTab === "studio" ? "text-foreground" : "text-muted-foreground/80"
-                      )}
-                    >
-                      Studio
-                    </button>
+                  </div>
+
+                  {/* Contact button on the right */}
+                  <div className="flex justify-end">
                     <a 
-                      href="#about" 
-                      onClick={handleAboutClick}
-                      className="text-sm font-medium tracking-wide text-muted-foreground/80 transition-colors hover:text-muted-foreground"
+                      href="mailto:theproducedstudio@gmail.com"
+                      className="liquid-glass rounded-full px-5 py-2 md:px-8 md:py-3 text-xs md:text-sm font-medium text-foreground transition-transform hover:scale-[1.03]"
                     >
-                      About
+                      Contact
                     </a>
                   </div>
-
-                  {/* Mobile/Tablet Menu Toggle */}
-                  <button 
-                    className="flex lg:hidden text-foreground"
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                  >
-                    {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
-                  </button>
-
-                  <a 
-                    href="mailto:theproducedstudio@gmail.com"
-                    className="liquid-glass hidden rounded-full px-8 py-3 text-sm font-medium text-foreground transition-transform hover:scale-[1.03] lg:block"
-                  >
-                    Contact
-                  </a>
                 </div>
-
-                {/* Mobile/Tablet Menu Overlay */}
-                <AnimatePresence>
-                  {isMenuOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      className="absolute left-0 right-0 top-full mt-4 flex flex-col items-center gap-8 bg-black/95 px-6 py-16 backdrop-blur-2xl lg:hidden"
-                    >
-                      <button 
-                        className={cn(
-                          "text-xl font-medium",
-                          activeTab === "home" ? "text-foreground" : "text-muted-foreground/80"
-                        )}
-                        onClick={() => { setActiveTab("home"); setIsMenuOpen(false); }}
-                      >
-                        Home
-                      </button>
-                      <button 
-                        className={cn(
-                          "text-xl font-medium",
-                          activeTab === "studio" ? "text-foreground" : "text-muted-foreground/80"
-                        )}
-                        onClick={() => { setActiveTab("studio"); setIsMenuOpen(false); }}
-                      >
-                        Studio
-                      </button>
-                      <a 
-                        href="#about" 
-                        className="text-xl font-medium text-muted-foreground/80"
-                        onClick={handleAboutClickMobile}
-                      >
-                        About
-                      </a>
-                      <a 
-                        href="mailto:theproducedstudio@gmail.com"
-                        className="liquid-glass mt-6 w-full rounded-full py-5 text-center text-lg font-medium text-foreground"
-                      >
-                        Contact
-                      </a>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </nav>
 
               {activeTab === "home" ? (
@@ -415,6 +463,24 @@ export default function App() {
             {activeTab === "studio" && (
               <section className="relative z-10 bg-transparent px-6 py-24 md:px-12">
                 <div className="mx-auto max-w-screen-2xl">
+                  {/* Featured Vimeo Video taking up the entire top row */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                    className="w-full overflow-hidden rounded-2xl bg-black border-0 mb-8 aspect-[3990/1716] shadow-2xl"
+                  >
+                    <iframe
+                      src="https://player.vimeo.com/video/1209343360?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0"
+                      className="w-full h-full border-0 outline-none scale-[1.02] origin-center bg-black"
+                      style={{ border: "none", outline: "none", background: "black" }}
+                      frameBorder="0"
+                      allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      title="Tribal"
+                    />
+                  </motion.div>
+
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-12">
                     {GALLERY_ITEMS.map((item, idx) => {
                       const isDirectVideo = item.type === 'video' && (item.url?.toLowerCase().endsWith('.mov') || item.url?.toLowerCase().endsWith('.mp4'));
@@ -765,6 +831,74 @@ export default function App() {
                 referrerPolicy="no-referrer"
               />
             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Immersive Full Screen Menu Overlay */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="fixed inset-0 z-[150] flex flex-col justify-between bg-[#000000] px-6 py-8 md:px-12 md:py-12 select-none"
+          >
+            {/* Ambient Red Glow Backdrops matching the site's dark scheme */}
+            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+              <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#FA003F]/10 rounded-full blur-[140px]" />
+              <div className="absolute bottom-1/10 left-1/3 w-[400px] h-[400px] bg-red-950/15 rounded-full blur-[110px]" />
+            </div>
+
+            {/* Menu Header (Logo left, Close right) */}
+            <div className="relative z-10 flex items-center justify-between">
+              <div>
+                <img 
+                  src="https://i.ibb.co/ksH2WLYk/THE-PRODUCED-LOGO-RED.png" 
+                  alt="Produced Logo" 
+                  className="h-10 w-auto object-contain md:h-14"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+              
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="group flex items-center gap-3 text-xs font-semibold tracking-[0.25em] uppercase cursor-pointer text-zinc-400 hover:text-white transition-colors border-0 bg-transparent p-0"
+              >
+                <span>
+                  <TextRoll>CLOSE</TextRoll>
+                </span>
+                <X size={24} className="text-[#FA003F] group-hover:scale-110 transition-transform" />
+              </button>
+            </div>
+
+            {/* Centered navigation items using user's style */}
+            <div className="relative z-10 flex flex-1 items-center justify-center">
+              <ul className="flex flex-col items-center justify-center gap-5 sm:gap-6 md:gap-7 max-w-xl w-full text-center">
+                {navigationItems.map((item, index) => (
+                  <motion.li
+                    key={index}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05, duration: 0.45, ease: "easeOut" }}
+                    className="relative flex cursor-pointer flex-col items-center overflow-visible group"
+                    onClick={() => handleNavItemClick(item.name)}
+                  >
+                    <div className="relative flex items-start">
+                      <TextRoll
+                        center
+                        className="text-4xl xs:text-5xl md:text-7xl font-extrabold uppercase leading-[0.8] tracking-[-0.03em] text-zinc-100 group-hover:text-[#FA003F] transition-colors duration-300"
+                      >
+                        {item.name}
+                      </TextRoll>
+                    </div>
+                  </motion.li>
+                ))}
+              </ul>
+            </div>
+
+
           </motion.div>
         )}
       </AnimatePresence>
