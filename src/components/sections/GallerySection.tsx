@@ -36,6 +36,8 @@ const GalleryTile: React.FC<{
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
           muted
           playsInline
+          // Hold off on the clip itself until a hover asks for it
+          preload="metadata"
           onMouseOver={(e) => (e.target as HTMLVideoElement).play()}
           onMouseOut={(e) => {
             const v = e.target as HTMLVideoElement;
@@ -48,6 +50,7 @@ const GalleryTile: React.FC<{
           src={item.type === "video" ? item.thumbnail : item.url}
           alt={item.title || `Studio work ${index + 1}`}
           loading="lazy"
+          decoding="async"
           onLoad={() => setLoaded(true)}
           className={cn(
             "h-full w-full object-cover object-center transition-all duration-[1200ms] ease-out group-hover:scale-110",

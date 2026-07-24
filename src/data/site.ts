@@ -170,15 +170,26 @@ export const isDirectVideoUrl = (url: string | undefined) =>
   !!url && (url.toLowerCase().endsWith(".mov") || url.toLowerCase().endsWith(".mp4"));
 
 /**
- * Warm the browser cache for branding and gallery assets during the
- * preloader window so the studio grid appears instantly.
+ * How many gallery tiles to warm ahead of time — the first row under the
+ * featured film. The rest load lazily as they scroll into view.
+ *
+ * Warming the whole grid would queue ~180MB of full-resolution source files,
+ * none of which the landing page even shows: the grid lives behind the Studio
+ * tab. The tiles carry `loading="lazy"` and fade in, so anything past the
+ * first row costs nothing to defer.
+ */
+const PRELOAD_TILE_COUNT = 4;
+
+/**
+ * Warm the browser cache for branding and the first gallery tiles during the
+ * preloader window so the top of the studio grid appears instantly.
  */
 export function preloadSiteAssets() {
   [BRAND.logoRed, BRAND.logoFlicker].forEach((src) => {
     const img = new Image();
     img.src = src;
   });
-  GALLERY_ITEMS.forEach((item) => {
+  GALLERY_ITEMS.slice(0, PRELOAD_TILE_COUNT).forEach((item) => {
     const src = item.type === "video" ? item.thumbnail : item.url;
     if (src) {
       const img = new Image();
