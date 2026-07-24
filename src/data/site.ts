@@ -85,6 +85,18 @@ export interface GalleryItem {
 }
 
 export const GALLERY_ITEMS: GalleryItem[] = [
+  // Latest set — sits directly under the featured film. Portraits run four
+  // across, then the wider frames step down in pairs.
+  { url: "https://imglink.cc/cdn/h7Iy--h5be.jpg", span: "lg:col-span-3 h-[500px]" },
+  { url: "https://imglink.cc/cdn/G0Xq_l79_f.jpg", span: "lg:col-span-3 h-[500px]" },
+  { url: "https://imglink.cc/cdn/FDKXecw5zG.jpg", span: "lg:col-span-3 h-[500px]" },
+  { url: "https://imglink.cc/cdn/-7l6vRZ0Hb.jpg", span: "lg:col-span-3 h-[500px]" },
+  { url: "https://imglink.cc/cdn/PDOSgNYwfo.jpg", span: "lg:col-span-4 h-[300px]" },
+  { url: "https://imglink.cc/cdn/Z76TUqmS73.jpg", span: "lg:col-span-4 h-[300px]" },
+  { url: "https://imglink.cc/cdn/KmUsheEssh.jpg", span: "lg:col-span-4 h-[300px]" },
+  { url: "https://imglink.cc/cdn/P3RDPdx1ns.jpg", span: "lg:col-span-6 h-[450px]" },
+  { url: "https://imglink.cc/cdn/NRb1t92JR6.jpg", span: "lg:col-span-6 h-[450px]" },
+
   { url: "https://imglink.cc/cdn/i4VolVOCwH.png", span: "lg:col-span-4 h-[350px]" },
   { url: "https://imglink.cc/cdn/p-9D0eKdmo.png", span: "lg:col-span-4 h-[350px]" },
   { url: "https://imglink.cc/cdn/k127j8cU43.png", span: "lg:col-span-4 h-[350px]" },
