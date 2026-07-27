@@ -7,7 +7,21 @@ import React, { useState } from "react";
 import { motion } from "motion/react";
 import { Play } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { FEATURED_VIDEOS, GALLERY_ITEMS, GalleryItem, isDirectVideoUrl } from "../../data/site";
+import {
+  BRAND,
+  FEATURED_VIDEOS,
+  GalleryItem,
+  IMAGE_ITEMS,
+  VIDEO_ITEMS,
+  isDirectVideoUrl,
+} from "../../data/site";
+
+type StudioTab = "video" | "images";
+
+const STUDIO_TABS: { id: StudioTab; label: string }[] = [
+  { id: "video", label: "Video" },
+  { id: "images", label: "Images" },
+];
 
 /** One tile in the studio grid: image, hover-to-play clip, or video thumbnail. */
 const GalleryTile: React.FC<{
@@ -87,11 +101,13 @@ const GalleryTile: React.FC<{
   );
 };
 
-/** Studio gallery: featured film on top, then the masonry-style grid. */
+/** Studio gallery: Video and Images tabs over the masonry-style grid. */
 export const GallerySection: React.FC<{
   onSelectImage: (url: string) => void;
   onSelectVideo: (url: string) => void;
 }> = ({ onSelectImage, onSelectVideo }) => {
+  const [tab, setTab] = useState<StudioTab>("video");
+
   const handleSelect = (item: GalleryItem) => {
     if (item.type === "video") {
       onSelectVideo(item.url || "");
@@ -103,36 +119,80 @@ export const GallerySection: React.FC<{
   return (
     <section className="relative z-10 bg-transparent px-6 py-24 md:px-12">
       <div className="mx-auto max-w-screen-2xl">
-        {/* Featured films sharing the top row, stacked on narrow screens.
-            Widths track each film's aspect ratio so the row bottoms line up. */}
-        <div className="mb-8 flex flex-col gap-4 lg:flex-row">
-          {FEATURED_VIDEOS.map((video, idx) => (
-            <motion.div
-              key={video.src}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: idx * 0.1 }}
-              style={{ aspectRatio: video.ratio, flexGrow: video.ratio, flexBasis: 0 }}
-              className="w-full overflow-hidden rounded-2xl bg-black border-0 shadow-2xl"
+        {/* Tab bar: Video | Images */}
+        <div className="mb-10 flex items-center gap-10 border-b border-white/10">
+          {STUDIO_TABS.map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={cn(
+                "relative pb-4 text-base font-medium uppercase tracking-widest transition-colors duration-300 md:text-lg",
+                tab === t.id ? "text-white" : "text-white/40 hover:text-white/70"
+              )}
             >
-              <iframe
-                src={video.src}
-                className="w-full h-full border-0 outline-none scale-[1.02] origin-center bg-black"
-                style={{ border: "none", outline: "none", background: "black" }}
-                frameBorder="0"
-                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                title={video.title}
-              />
-            </motion.div>
+              {t.label}
+              {tab === t.id && (
+                <motion.span
+                  layoutId="studio-tab-indicator"
+                  className="absolute inset-x-0 bottom-0 h-0.5"
+                  style={{ background: BRAND.red }}
+                />
+              )}
+            </button>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-12">
-          {GALLERY_ITEMS.map((item, idx) => (
-            <GalleryTile key={idx} item={item} index={idx} onSelect={handleSelect} />
-          ))}
-        </div>
+        {/* Keyed remount fades the incoming panel in. No exit animation: the
+            swap must not depend on an outgoing animation completing. */}
+        <motion.div
+          key={tab}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          {tab === "video" && (
+            <>
+              {/* Featured films sharing the top row, stacked on narrow screens.
+                  Widths track each film's aspect ratio so the row bottoms line up. */}
+              <div className="mb-4 flex flex-col gap-4 lg:flex-row">
+                {FEATURED_VIDEOS.map((video, idx) => (
+                  <motion.div
+                    key={video.src}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: idx * 0.1 }}
+                    style={{ aspectRatio: video.ratio, flexGrow: video.ratio, flexBasis: 0 }}
+                    className="w-full overflow-hidden rounded-2xl bg-black border-0 shadow-2xl"
+                  >
+                    <iframe
+                      src={video.src}
+                      className="w-full h-full border-0 outline-none scale-[1.02] origin-center bg-black"
+                      style={{ border: "none", outline: "none", background: "black" }}
+                      frameBorder="0"
+                      allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      title={video.title}
+                    />
+                  </motion.div>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-12">
+                {VIDEO_ITEMS.map((item, idx) => (
+                  <GalleryTile key={idx} item={item} index={idx} onSelect={handleSelect} />
+                ))}
+              </div>
+            </>
+          )}
+
+          {tab === "images" && (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-12">
+              {IMAGE_ITEMS.map((item, idx) => (
+                <GalleryTile key={idx} item={item} index={idx} onSelect={handleSelect} />
+              ))}
+            </div>
+          )}
+        </motion.div>
       </div>
     </section>
   );

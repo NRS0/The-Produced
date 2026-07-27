@@ -181,13 +181,28 @@ export const GALLERY_ITEMS: GalleryItem[] = [
   { url: "https://imglink.cc/cdn/iiWkIbKyBX.png", span: "lg:col-span-12 h-[300px]" },
 ];
 
+/**
+ * The studio grid split by tab. Spans in GALLERY_ITEMS were composed around
+ * mixed rows of stills and films, so the video tab re-spans its four films
+ * into an even two-by-two; the stills keep their original rhythm.
+ */
+const VIDEO_TAB_SPAN = "lg:col-span-6 h-[450px]";
+
+export const VIDEO_ITEMS: GalleryItem[] = GALLERY_ITEMS.filter(
+  (item) => item.type === "video"
+).map((item) => ({ ...item, span: VIDEO_TAB_SPAN }));
+
+export const IMAGE_ITEMS: GalleryItem[] = GALLERY_ITEMS.filter(
+  (item) => item.type !== "video"
+);
+
 /** True when the item links to a raw video file rather than an embedded player. */
 export const isDirectVideoUrl = (url: string | undefined) =>
   !!url && (url.toLowerCase().endsWith(".mov") || url.toLowerCase().endsWith(".mp4"));
 
 /**
- * How many gallery tiles to warm ahead of time — the first row under the
- * featured film. The rest load lazily as they scroll into view.
+ * How many image tiles to warm ahead of time — the first row of the images
+ * tab. The rest load lazily as they scroll into view.
  *
  * Warming the whole grid would queue ~180MB of full-resolution source files,
  * none of which the landing page even shows: the grid lives behind the Studio
@@ -197,19 +212,22 @@ export const isDirectVideoUrl = (url: string | undefined) =>
 const PRELOAD_TILE_COUNT = 4;
 
 /**
- * Warm the browser cache for branding and the first gallery tiles during the
- * preloader window so the top of the studio grid appears instantly.
+ * Warm the browser cache for branding, the video-tab thumbnails, and the
+ * first image tiles during the preloader window so both tabs open instantly.
  */
 export function preloadSiteAssets() {
   [BRAND.logoRed, BRAND.logoFlicker].forEach((src) => {
     const img = new Image();
     img.src = src;
   });
-  GALLERY_ITEMS.slice(0, PRELOAD_TILE_COUNT).forEach((item) => {
-    const src = item.type === "video" ? item.thumbnail : item.url;
-    if (src) {
+  VIDEO_ITEMS.forEach((item) => {
+    if (item.thumbnail) {
       const img = new Image();
-      img.src = src;
+      img.src = item.thumbnail;
     }
+  });
+  IMAGE_ITEMS.slice(0, PRELOAD_TILE_COUNT).forEach((item) => {
+    const img = new Image();
+    img.src = item.url;
   });
 }
