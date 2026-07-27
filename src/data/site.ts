@@ -15,11 +15,27 @@ export const BRAND = {
   tagline: "Est. 2026 — Built for the quiet ones",
 } as const;
 
-export const FEATURED_VIDEO = {
-  src: "https://player.vimeo.com/video/1209343360?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0",
-  title: "Tribal",
-  aspect: "aspect-[3990/1716]",
-} as const;
+/**
+ * The films that head the studio grid, shown side by side above the tiles.
+ *
+ * Each carries its true aspect ratio and is laid out at a width proportional
+ * to it, so the pair lands on exactly the same height with neither one
+ * letterboxed. Forcing a shared tile shape instead pillarboxes the odd one
+ * out, and the player fills that dead space with white — very visible against
+ * this page.
+ */
+export const FEATURED_VIDEOS = [
+  {
+    src: "https://player.vimeo.com/video/1209343360?badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0",
+    title: "Tribal",
+    ratio: 3990 / 1716,
+  },
+  {
+    src: "https://player.vimeo.com/video/1213123690?badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0",
+    title: "F1 Spec Edit 2",
+    ratio: 16 / 9,
+  },
+] as const;
 
 export interface NavItem {
   name: "Home" | "Studio" | "About";

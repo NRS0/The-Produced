@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { motion } from "motion/react";
 import { Play } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { FEATURED_VIDEO, GALLERY_ITEMS, GalleryItem, isDirectVideoUrl } from "../../data/site";
+import { FEATURED_VIDEOS, GALLERY_ITEMS, GalleryItem, isDirectVideoUrl } from "../../data/site";
 
 /** One tile in the studio grid: image, hover-to-play clip, or video thumbnail. */
 const GalleryTile: React.FC<{
@@ -103,26 +103,30 @@ export const GallerySection: React.FC<{
   return (
     <section className="relative z-10 bg-transparent px-6 py-24 md:px-12">
       <div className="mx-auto max-w-screen-2xl">
-        {/* Featured film taking up the entire top row */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className={cn(
-            "w-full overflow-hidden rounded-2xl bg-black border-0 mb-8 shadow-2xl",
-            FEATURED_VIDEO.aspect
-          )}
-        >
-          <iframe
-            src={FEATURED_VIDEO.src}
-            className="w-full h-full border-0 outline-none scale-[1.02] origin-center bg-black"
-            style={{ border: "none", outline: "none", background: "black" }}
-            frameBorder="0"
-            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            title={FEATURED_VIDEO.title}
-          />
-        </motion.div>
+        {/* Featured films sharing the top row, stacked on narrow screens.
+            Widths track each film's aspect ratio so the row bottoms line up. */}
+        <div className="mb-8 flex flex-col gap-4 lg:flex-row">
+          {FEATURED_VIDEOS.map((video, idx) => (
+            <motion.div
+              key={video.src}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: idx * 0.1 }}
+              style={{ aspectRatio: video.ratio, flexGrow: video.ratio, flexBasis: 0 }}
+              className="w-full overflow-hidden rounded-2xl bg-black border-0 shadow-2xl"
+            >
+              <iframe
+                src={video.src}
+                className="w-full h-full border-0 outline-none scale-[1.02] origin-center bg-black"
+                style={{ border: "none", outline: "none", background: "black" }}
+                frameBorder="0"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                title={video.title}
+              />
+            </motion.div>
+          ))}
+        </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-12">
           {GALLERY_ITEMS.map((item, idx) => (
