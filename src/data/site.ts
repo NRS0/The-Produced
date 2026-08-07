@@ -35,6 +35,11 @@ export const FEATURED_VIDEOS = [
     title: "F1 Spec Edit 2",
     ratio: 16 / 9,
   },
+  {
+    src: "https://player.vimeo.com/video/1216385603?badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0",
+    title: "Skate",
+    ratio: 16 / 9,
+  },
 ] as const;
 
 export interface NavItem {
